@@ -1,1 +1,0 @@
-var e=[{id:"default",label:"Azul",accent:"#7a9fc4"},{id:"teal",label:"Menta",accent:"#7bb8ad"},{id:"violet",label:"Lavanda",accent:"#a090c8"},{id:"rose",label:"Rosa",accent:"#d898a8"},{id:"amber",label:"P\xEAssego",accent:"#d4a574"},{id:"slate",label:"Cinza",accent:"#8f96a3"}];function c(a){return e.find(t=>t.id===a)?.accent??e[0].accent}export{e as a,c as b};
