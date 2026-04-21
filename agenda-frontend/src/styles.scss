@@ -1,0 +1,855 @@
+:root {
+  color-scheme: light;
+  /* Tinta & papel — paleta pastel (caderno suave) */
+  --text: #3d3a36;
+  --muted: #8a8478;
+  --surface-1: #e4dfd6;
+  --surface-2: #faf7f2;
+  --surface-3: #f1ebe3;
+  --border: #d8d0c6;
+  --accent: #6e88a8;
+  --accent-soft: color-mix(in srgb, var(--accent) 26%, transparent);
+  --margin-line: rgba(220, 150, 150, 0.38);
+  --rule-line: rgba(120, 140, 170, 0.12);
+  --neon-1: #8ec9bc;
+  --neon-2: #b8a8d4;
+  --success: #8fc4a8;
+  /** Semântica de erro / destrutivo — uma única fonte para produto */
+  --danger: #c0342d;
+  --danger-ink: color-mix(in srgb, var(--danger) 92%, var(--text));
+  --danger-soft: color-mix(in srgb, var(--danger) 14%, var(--surface-3));
+  --danger-border: color-mix(in srgb, var(--danger) 42%, var(--border));
+  /** Texto sobre fundo accent (primário, FAB) */
+  --on-accent: #fffef9;
+  --glow-sm: 0 0 14px color-mix(in srgb, var(--accent) 22%, transparent);
+  /** Foco teclado — pastel + halo suave */
+  --focus-ring: color-mix(in srgb, var(--accent) 55%, #6a7a8c 45%);
+  --focus-halo: color-mix(in srgb, var(--accent) 48%, var(--surface-2));
+  --focus-on-solid-ring: #fff9f4;
+  --focus-on-solid-halo: color-mix(in srgb, var(--accent) 58%, var(--surface-2));
+  --shadow: 4px 5px 0 rgba(25, 22, 18, 0.05), 0 1px 0 rgba(255, 255, 255, 0.72) inset;
+  --radius-md: 0.45rem;
+  --radius-lg: 0.55rem;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-ui: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono-digits: Orbitron, ui-monospace, monospace;
+  /** Botões — sombras, halos e tamanhos (um só sistema claro/escuro) */
+  --btn-press: color-mix(in srgb, var(--surface-1) 78%, #141210);
+  --btn-raised-shadow: 2px 3px 0 var(--btn-press);
+  --btn-raised-shadow-sm: 2px 2px 0 var(--btn-press);
+  --btn-raised-shadow-xs: 1px 2px 0 var(--btn-press);
+  --btn-raised-shadow-hover: 3px 4px 0 color-mix(in srgb, var(--btn-press) 88%, #000);
+  --btn-halo-accent: 0 0 0 2px color-mix(in srgb, var(--accent) 14%, transparent);
+  --btn-halo-accent-soft: 0 0 0 2px color-mix(in srgb, var(--accent) 12%, transparent);
+  --btn-halo-success: 0 0 0 2px color-mix(in srgb, var(--success) 18%, transparent);
+  --btn-halo-danger: 0 0 0 2px color-mix(in srgb, var(--danger) 18%, transparent);
+  --btn-primary-border: color-mix(in srgb, var(--accent) 55%, #1a1510);
+  --btn-primary-shadow: 2px 3px 0 color-mix(in srgb, #000 18%, var(--accent));
+  --btn-primary-shadow-hover: 3px 4px 0 color-mix(in srgb, #000 14%, var(--accent));
+  /** Tons de botão por função (nem tudo azul) */
+  --btn-neutral-border: color-mix(in srgb, var(--border) 82%, var(--text));
+  --btn-neutral-fill: var(--surface-3);
+  --btn-neutral-ink: var(--text);
+  --btn-neutral-shadow: 2px 3px 0 var(--btn-press);
+  --btn-lilac-border: color-mix(in srgb, var(--neon-2) 62%, #5c4e6e);
+  --btn-lilac-fill: color-mix(in srgb, var(--neon-2) 88%, var(--surface-2));
+  --btn-lilac-ink: #1c1624;
+  --btn-lilac-shadow: 2px 3px 0 color-mix(in srgb, #000 16%, var(--neon-2));
+  --btn-mint-border: color-mix(in srgb, var(--neon-1) 58%, #3a5a54);
+  --btn-mint-fill: color-mix(in srgb, var(--neon-1) 88%, var(--surface-2));
+  --btn-mint-ink: #121c1a;
+  --btn-mint-shadow: 2px 3px 0 color-mix(in srgb, #000 16%, var(--neon-1));
+  --btn-inset-highlight: 0 1px 0 #ffffff inset;
+  --btn-inset-highlight-strong: 0 1px 0 #ffffff inset;
+  /** Hover: realça a “frente” (bisel), sem alongar a sombra para trás */
+  --btn-inset-highlight-hover: 0 2px 0 #ffffff inset;
+  --btn-inset-highlight-strong-hover: 0 2px 0 #ffffff inset;
+  --btn-icon-size: 3rem;
+  --btn-icon-size-dense: 2.75rem;
+  /** Caixinha “desenhada” — sucesso / perigo (mesma geometria do primário) */
+  --btn-success-border: color-mix(in srgb, var(--success) 48%, #142018);
+  --btn-success-shadow: 2px 3px 0 color-mix(in srgb, #000 22%, var(--success));
+  --btn-success-shadow-hover: 3px 4px 0 color-mix(in srgb, #000 16%, var(--success));
+  --on-success: #0f1612;
+  --btn-danger-solid-border: color-mix(in srgb, var(--danger) 52%, #2a0c0c);
+  --btn-danger-shadow: 2px 3px 0 color-mix(in srgb, #000 26%, var(--danger));
+  --btn-danger-shadow-hover: 3px 4px 0 color-mix(in srgb, #000 20%, var(--danger));
+  /** Ícone sobre face de perigo (contraste claro/escuro) */
+  --btn-danger-icon-ink: #fffef9;
+  --btn-pad-y: 0.65rem;
+  --btn-pad-x: 0.9rem;
+  --btn-font-weight: 650;
+  /** Notas — mesma linguagem de relevo / borda que botões primários */
+  --note-accent: #b8941e;
+  --note-accent-soft: color-mix(in srgb, var(--note-accent) 26%, transparent);
+  --note-fab-mid: #e6bc00;
+  --note-fab-highlight: #fff6d0;
+  --note-fab-ink: #2c2610;
+  --note-fab-border: color-mix(in srgb, var(--note-fab-mid) 62%, #3a3218);
+  --note-fab-shadow: 2px 3px 0 color-mix(in srgb, #000 18%, var(--note-fab-mid));
+  --note-fab-shadow-hover: 3px 4px 0 color-mix(in srgb, #000 14%, var(--note-fab-mid));
+  --note-dot: var(--note-fab-mid);
+  --note-dot-ring: color-mix(in srgb, #a88400 38%, transparent);
+}
+
+:root.dark {
+  color-scheme: dark;
+  /* Preto + cinza azulado; acentos pastéis (azul, menta, lavanda) */
+  --text: #e8edf5;
+  --muted: #8b9bb0;
+  --surface-1: #07080c;
+  --surface-2: #10141c;
+  --surface-3: #171d2a;
+  --border: #2a3445;
+  --accent: #9bb8ec;
+  --accent-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+  --margin-line: rgba(248, 172, 198, 0.34);
+  --rule-line: rgba(130, 155, 200, 0.11);
+  --neon-1: #9dd4cf;
+  --neon-2: #c8b8ea;
+  --success: #9ee0bf;
+  --danger: #f87171;
+  --danger-ink: color-mix(in srgb, var(--danger) 88%, #07080c);
+  --danger-soft: color-mix(in srgb, var(--danger) 14%, var(--surface-3));
+  --danger-border: color-mix(in srgb, var(--danger) 44%, var(--border));
+  --on-accent: #0c1018;
+  --glow-sm: 0 0 18px color-mix(in srgb, var(--accent) 18%, transparent);
+  --focus-ring: color-mix(in srgb, var(--accent) 52%, #c8daf8 48%);
+  --focus-halo: color-mix(in srgb, var(--accent) 52%, var(--surface-2));
+  --focus-on-solid-ring: #e8f0ff;
+  --focus-on-solid-halo: color-mix(in srgb, var(--accent) 58%, var(--surface-1));
+  --shadow: 4px 6px 0 rgba(0, 0, 0, 0.45), 0 1px 0 rgba(180, 200, 230, 0.06) inset;
+  --btn-press: color-mix(in srgb, #000 52%, var(--surface-2));
+  --btn-halo-accent: 0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent);
+  --btn-halo-accent-soft: 0 0 0 2px color-mix(in srgb, var(--accent) 12%, transparent);
+  --btn-halo-success: 0 0 0 2px color-mix(in srgb, var(--success) 16%, transparent);
+  --btn-halo-danger: 0 0 0 2px color-mix(in srgb, var(--danger) 16%, transparent);
+  --btn-primary-border: color-mix(in srgb, var(--accent) 50%, #05070c);
+  --btn-neutral-border: color-mix(in srgb, var(--border) 75%, var(--text));
+  --btn-neutral-fill: var(--surface-3);
+  --btn-neutral-ink: var(--text);
+  --btn-lilac-border: color-mix(in srgb, var(--neon-2) 55%, #0c0a12);
+  --btn-lilac-fill: color-mix(in srgb, var(--neon-2) 82%, var(--surface-2));
+  --btn-lilac-ink: #f2ecfc;
+  --btn-lilac-shadow: 2px 3px 0 color-mix(in srgb, #000 28%, var(--neon-2));
+  --btn-mint-border: color-mix(in srgb, var(--neon-1) 52%, #0a1211);
+  --btn-mint-fill: color-mix(in srgb, var(--neon-1) 82%, var(--surface-2));
+  --btn-mint-ink: #e6faf4;
+  --btn-mint-shadow: 2px 3px 0 color-mix(in srgb, #000 28%, var(--neon-1));
+  --btn-inset-highlight: 0 1px 0 #4a5a72 inset;
+  --btn-inset-highlight-strong: 0 1px 0 #56688a inset;
+  --btn-inset-highlight-hover: 0 2px 0 #5c7090 inset;
+  --btn-inset-highlight-strong-hover: 0 2px 0 #6a80a0 inset;
+  --btn-success-shadow: 2px 3px 0 color-mix(in srgb, #000 30%, var(--success));
+  --btn-success-shadow-hover: 3px 4px 0 color-mix(in srgb, #000 22%, var(--success));
+  --btn-danger-shadow: 2px 3px 0 color-mix(in srgb, #000 32%, var(--danger));
+  --btn-danger-shadow-hover: 3px 4px 0 color-mix(in srgb, #000 26%, var(--danger));
+  --btn-danger-icon-ink: #0c1018;
+  --on-success: #e8f4ef;
+  --note-accent: #e6c85c;
+  --note-accent-soft: color-mix(in srgb, var(--note-accent) 22%, transparent);
+  --note-fab-mid: #c9a227;
+  --note-fab-highlight: #f0dfa0;
+  --note-fab-ink: #141208;
+  --note-fab-border: color-mix(in srgb, var(--note-fab-mid) 42%, #0a0a06);
+  --note-fab-shadow: 2px 3px 0 color-mix(in srgb, #000 22%, var(--note-fab-mid));
+  --note-fab-shadow-hover: 3px 4px 0 color-mix(in srgb, #000 18%, var(--note-fab-mid));
+  --note-dot: #f0d050;
+  --note-dot-ring: color-mix(in srgb, #000 32%, transparent);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+  /** Evita “saltar” a largura do miolo quando a barra vertical do documento aparece/some entre vistas. */
+  scrollbar-gutter: stable;
+}
+
+/* Tooltip criado por TooltipDirective (anexado ao body) */
+.app-tooltip {
+  max-width: min(17rem, calc(100vw - 1.25rem));
+  padding: 0.45rem 0.65rem;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-weight: 550;
+  line-height: 1.35;
+  letter-spacing: 0;
+  font-family: var(--font-ui);
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+  user-select: text;
+  cursor: default;
+}
+
+/* Card ao passar o mouse no dia (DayHoverCardDirective) */
+.app-day-hover-card {
+  max-width: min(18.5rem, calc(100vw - 1.25rem));
+  padding: 0.55rem 0.65rem 0.6rem;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  letter-spacing: 0;
+  font-family: var(--font-ui);
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+}
+
+.app-day-hover-card__title {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.app-day-hover-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.app-day-hover-card__section {
+  margin: 0.45rem 0 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.app-day-hover-card__section:first-of-type {
+  margin-top: 0;
+}
+
+.app-day-hover-card__row {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.35rem 0.45rem 0.4rem 0.5rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-left-style: solid;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease;
+}
+
+.app-day-hover-card__row:hover {
+  background: color-mix(in srgb, var(--surface-3) 72%, var(--surface-2));
+}
+
+.app-day-hover-card__row:active {
+  transform: scale(0.99);
+}
+
+.app-day-hover-card__row--event {
+  border-left-color: var(--accent);
+}
+
+.app-day-hover-card__row--note {
+  border-left-color: var(--note-accent);
+}
+
+.app-day-hover-card__meta {
+  margin: 0 0 0.12rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-day-hover-card__name {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.app-day-hover-card__sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.app-day-hover-card__more {
+  margin: 0.4rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  background-color: var(--surface-1);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 11px,
+    var(--rule-line) 11px,
+    var(--rule-line) 12px
+  );
+  color: var(--text);
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--text);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-ui);
+  font-weight: 700;
+}
+
+/** Cartões / folhas empilhadas (usado em login, evento, calendário) */
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  box-shadow: var(--shadow);
+}
+
+/** Feedback de formulário — mesma linguagem em todo o app */
+.hint {
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.hint--error {
+  color: var(--danger-ink);
+  font-weight: 600;
+}
+
+/** Campos de texto — linha de caderno + margem vermelha */
+.input {
+  width: 100%;
+  display: block;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+  color: var(--text);
+  padding: 0.55rem 0.35rem 0.45rem 0.55rem;
+  font-size: 1.02rem;
+  font-family: var(--font-ui);
+  line-height: 1.35;
+  box-shadow: inset 3px 0 0 0 var(--margin-line);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.input::placeholder {
+  color: color-mix(in srgb, var(--muted) 75%, transparent);
+}
+
+.input:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+  background-color: color-mix(in srgb, var(--surface-2) 95%, var(--accent-soft));
+  box-shadow:
+    inset 3px 0 0 0 color-mix(in srgb, var(--margin-line) 85%, var(--accent)),
+    0 1px 0 color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/**
+ * Descrição / notas: altura de ~12 linhas + pauta pontilhada (SVG repete a cada --notebook-line).
+ * `background-color` no :focus preserva o `background-image` das linhas.
+ */
+.input.input-area {
+  --notebook-line: 1.55rem;
+  resize: vertical;
+  min-height: calc(var(--notebook-line) * 12 + 0.55rem);
+  line-height: var(--notebook-line);
+  padding: 0.48rem 0.42rem 0.58rem 0.58rem;
+  background-color: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='25' viewBox='0 0 24 25'%3E%3Cline x1='0' y1='24' x2='24' y2='24' stroke='%238a8278' stroke-opacity='0.4' stroke-width='1' stroke-dasharray='2 6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 100% var(--notebook-line);
+  background-repeat: repeat;
+  background-attachment: local;
+}
+
+:root.dark .input.input-area {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='25' viewBox='0 0 24 25'%3E%3Cline x1='0' y1='24' x2='24' y2='24' stroke='%238b9bb0' stroke-opacity='0.35' stroke-width='1' stroke-dasharray='2 6' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.input.input-area:focus,
+.input.input-area:focus-visible {
+  background-color: color-mix(in srgb, var(--surface-2) 95%, var(--accent-soft));
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button:not(:disabled),
+.btn,
+button.fab-main {
+  transition:
+    transform 0.18s var(--ease-out),
+    box-shadow 0.22s ease,
+    border-color 0.2s ease,
+    background 0.22s ease,
+    filter 0.2s ease,
+    opacity 0.2s ease;
+}
+
+/** Ícone como botão: o alvo é `<button>`, o relevo e o `scale` ficam na `.icon-hit__face`. */
+button.icon-hit {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.icon-hit .icon-hit__face {
+  transform-origin: center;
+  transition:
+    transform 0.18s var(--ease-out),
+    border-color 0.2s ease,
+    box-shadow 0.22s ease,
+    background 0.2s ease,
+    filter 0.2s ease;
+}
+
+/** Centraliza qualquer Lucide dentro de `.icon-hit__face` sem depender de ajustes locais. */
+button.icon-hit .icon-hit__face > lucide-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+button.icon-hit .icon-hit__face > lucide-icon svg {
+  display: block;
+  margin: auto;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/** Padrão global: qualquer ícone dentro de botão fica perfeitamente centralizado. */
+button lucide-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+button lucide-icon svg {
+  display: block;
+  margin: auto;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/**
+ * Ícones clicáveis — mesma geometria “desenhada”; cor por função (neutro / menta / lilás).
+ * Azul (accent) fica para primário. Abas (.segments-tab__face) excluídas.
+ */
+button.icon-hit .icon-hit__face:not(.segments-tab__face) {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--btn-neutral-border);
+  background: var(--btn-neutral-fill);
+  color: var(--btn-neutral-ink);
+  box-shadow: var(--btn-neutral-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit:hover:not(:disabled) .icon-hit__face:not(.segments-tab__face) {
+  filter: brightness(1.04);
+  transform: translateY(-3px);
+  box-shadow: var(--btn-neutral-shadow), var(--btn-inset-highlight-hover);
+}
+
+/** Pendente / adicionar tag — menta */
+button.icon-hit.complete:not(.complete--on) .icon-hit__face,
+button.icon-hit.day-events-complete:not(.day-events-complete--on) .icon-hit__face,
+button.icon-hit.btn-tag-add .icon-hit__face {
+  border-color: var(--btn-mint-border);
+  background: var(--btn-mint-fill);
+  color: var(--btn-mint-ink);
+  box-shadow: var(--btn-mint-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.complete:not(.complete--on):hover:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-complete:not(.day-events-complete--on):hover:not(:disabled) .icon-hit__face,
+button.icon-hit.btn-tag-add:hover:not(:disabled) .icon-hit__face {
+  box-shadow: var(--btn-mint-shadow), var(--btn-inset-highlight-hover);
+}
+
+/** Editar — lavanda / lilás */
+button.icon-hit.card-edit .icon-hit__face,
+button.icon-hit.day-events-edit .icon-hit__face {
+  border-color: var(--btn-lilac-border);
+  background: var(--btn-lilac-fill);
+  color: var(--btn-lilac-ink);
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.card-edit:hover:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-edit:hover:not(:disabled) .icon-hit__face {
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight-hover);
+}
+
+/** Marcar feito / estado “ligado” — caixinha verde desenhada */
+button.icon-hit.complete.complete--on .icon-hit__face,
+button.icon-hit.day-events-complete.day-events-complete--on .icon-hit__face,
+button.icon-hit.day-block__btn--on .icon-hit__face {
+  border-color: var(--btn-success-border);
+  background: var(--success);
+  color: var(--on-success);
+  box-shadow: var(--btn-success-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.complete.complete--on:hover:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-complete.day-events-complete--on:hover:not(:disabled) .icon-hit__face,
+button.icon-hit.day-block__btn--on:hover:not(:disabled) .icon-hit__face {
+  filter: brightness(1.04);
+  transform: translateY(-3px);
+  box-shadow: var(--btn-success-shadow), var(--btn-inset-highlight-hover);
+}
+
+/** Apagar — caixinha vermelha desenhada (mesma geometria) */
+button.icon-hit.danger .icon-hit__face,
+button.icon-hit.day-events-delete .icon-hit__face,
+button.icon-hit.day-block__btn--danger .icon-hit__face {
+  border-color: var(--btn-danger-solid-border);
+  background: var(--danger);
+  color: var(--btn-danger-icon-ink);
+  box-shadow: var(--btn-danger-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.danger:hover:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-delete:hover:not(:disabled) .icon-hit__face,
+button.icon-hit.day-block__btn--danger:hover:not(:disabled) .icon-hit__face {
+  filter: brightness(1.05);
+  transform: translateY(-3px);
+  box-shadow: var(--btn-danger-shadow), var(--btn-inset-highlight-hover);
+}
+
+/** Clique: afunda a face (sombra fixa — não “cresce” para trás) */
+button.icon-hit:active:not(:disabled) .icon-hit__face:not(.segments-tab__face) {
+  transform: translateY(0) scale(0.96);
+  filter: brightness(0.98);
+  box-shadow: var(--btn-neutral-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.complete:not(.complete--on):active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-complete:not(.day-events-complete--on):active:not(:disabled) .icon-hit__face,
+button.icon-hit.btn-tag-add:active:not(:disabled) .icon-hit__face {
+  box-shadow: var(--btn-mint-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.card-edit:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-edit:active:not(:disabled) .icon-hit__face {
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.complete.complete--on:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-complete.day-events-complete--on:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-block__btn--on:active:not(:disabled) .icon-hit__face {
+  transform: translateY(0) scale(0.96);
+  filter: brightness(0.98);
+  box-shadow: var(--btn-success-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.danger:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-delete:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-block__btn--danger:active:not(:disabled) .icon-hit__face {
+  transform: translateY(0) scale(0.96);
+  filter: brightness(0.98);
+  box-shadow: var(--btn-danger-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit:hover:active:not(:disabled) .icon-hit__face:not(.segments-tab__face) {
+  transform: translateY(0) scale(0.95);
+  filter: brightness(0.97);
+  box-shadow: var(--btn-neutral-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.complete:not(.complete--on):hover:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-complete:not(.day-events-complete--on):hover:active:not(:disabled) .icon-hit__face,
+button.icon-hit.btn-tag-add:hover:active:not(:disabled) .icon-hit__face {
+  box-shadow: var(--btn-mint-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.card-edit:hover:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-edit:hover:active:not(:disabled) .icon-hit__face {
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.complete.complete--on:hover:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-complete.day-events-complete--on:hover:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-block__btn--on:hover:active:not(:disabled) .icon-hit__face {
+  transform: translateY(0) scale(0.95);
+  filter: brightness(0.97);
+  box-shadow: var(--btn-success-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit.danger:hover:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-events-delete:hover:active:not(:disabled) .icon-hit__face,
+button.icon-hit.day-block__btn--danger:hover:active:not(:disabled) .icon-hit__face {
+  transform: translateY(0) scale(0.95);
+  filter: brightness(0.97);
+  box-shadow: var(--btn-danger-shadow), var(--btn-inset-highlight);
+}
+
+button.icon-hit:active:not(:disabled) .segments-tab__face {
+  transform: scale(0.96);
+}
+
+button:not(:disabled):not(.icon-hit):active,
+.btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.btn {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  font-weight: var(--btn-font-weight);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  background: var(--surface-3);
+  color: var(--text);
+  box-shadow: var(--btn-raised-shadow);
+}
+
+.btn-primary {
+  border-color: var(--btn-primary-border);
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: var(--btn-primary-shadow), var(--btn-inset-highlight);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow: var(--btn-primary-shadow), var(--btn-inset-highlight-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+  filter: brightness(0.99);
+  box-shadow: var(--btn-primary-shadow), var(--btn-inset-highlight);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  box-shadow: none;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: color-mix(in srgb, var(--surface-3) 55%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/** Foco por teclado — tinta do caderno (não usa box-shadow para não apagar relevo dos .btn) */
+a:focus-visible,
+button:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role='tab']:focus-visible,
+[role='radio']:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+button.icon-hit:focus-visible {
+  outline: 2px solid var(--focus-on-solid-ring);
+  outline-offset: 3px;
+}
+
+button.icon-hit:focus-visible .icon-hit__face:not(.segments-tab__face) {
+  box-shadow: var(--btn-neutral-shadow), var(--btn-inset-highlight), 0 0 0 5px var(--focus-halo);
+}
+
+button.icon-hit.complete:not(.complete--on):focus-visible .icon-hit__face,
+button.icon-hit.day-events-complete:not(.day-events-complete--on):focus-visible .icon-hit__face,
+button.icon-hit.btn-tag-add:focus-visible .icon-hit__face {
+  box-shadow: var(--btn-mint-shadow), var(--btn-inset-highlight), 0 0 0 5px color-mix(in srgb, var(--neon-1) 52%, var(--surface-2));
+}
+
+button.icon-hit.card-edit:focus-visible .icon-hit__face,
+button.icon-hit.day-events-edit:focus-visible .icon-hit__face {
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight), 0 0 0 5px color-mix(in srgb, var(--neon-2) 52%, var(--surface-2));
+}
+
+button.icon-hit.danger:focus-visible .icon-hit__face,
+button.icon-hit.day-events-delete:focus-visible .icon-hit__face,
+button.icon-hit.day-block__btn--danger:focus-visible .icon-hit__face {
+  box-shadow: var(--btn-danger-shadow), var(--btn-inset-highlight), 0 0 0 5px var(--focus-on-solid-halo);
+}
+
+button.icon-hit.complete.complete--on:focus-visible .icon-hit__face,
+button.icon-hit.day-events-complete.day-events-complete--on:focus-visible .icon-hit__face,
+button.icon-hit.day-block__btn--on:focus-visible .icon-hit__face {
+  box-shadow: var(--btn-success-shadow), var(--btn-inset-highlight), 0 0 0 5px var(--focus-on-solid-halo);
+}
+
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/** Botão primário sobre accent: anel claro + halo */
+.btn-primary:focus-visible {
+  outline: 2px solid var(--focus-on-solid-ring);
+  outline-offset: 3px;
+  box-shadow: var(--btn-primary-shadow), var(--btn-inset-highlight), 0 0 0 5px var(--focus-on-solid-halo);
+}
+
+.btn-secondary {
+  border-color: var(--btn-lilac-border);
+  background: color-mix(in srgb, var(--btn-lilac-fill) 55%, var(--surface-2));
+  color: var(--text);
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight-strong);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--btn-lilac-border);
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight-strong-hover);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+  filter: brightness(0.99);
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight-strong);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--focus-on-solid-ring);
+  outline-offset: 3px;
+  box-shadow: var(--btn-lilac-shadow), var(--btn-inset-highlight-strong), 0 0 0 5px color-mix(in srgb, var(--neon-2) 34%, transparent);
+}
+
+.btn-ghost:focus-visible {
+  outline-color: var(--focus-ring);
+  box-shadow: 0 0 0 3px var(--focus-halo);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-bottom-color: var(--accent);
+  background-color: color-mix(in srgb, var(--surface-2) 95%, var(--accent-soft));
+  box-shadow:
+    inset 3px 0 0 0 color-mix(in srgb, var(--margin-line) 82%, var(--accent)),
+    0 1px 0 color-mix(in srgb, var(--accent) 16%, transparent),
+    0 0 0 5px var(--focus-halo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  button:not(:disabled),
+  .btn,
+  button.fab-main {
+    transition: none;
+  }
+
+  button:not(:disabled):active,
+  .btn:not(:disabled):active {
+    transform: none;
+  }
+
+  button.icon-hit .icon-hit__face {
+    transition: none;
+  }
+
+  button.icon-hit:active:not(:disabled) .icon-hit__face {
+    transform: none;
+  }
+
+  button.icon-hit:hover:not(:disabled) .icon-hit__face:not(.segments-tab__face),
+  button.icon-hit.complete:not(.complete--on):hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.day-events-complete:not(.day-events-complete--on):hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.btn-tag-add:hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.card-edit:hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.day-events-edit:hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.complete.complete--on:hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.day-events-complete.day-events-complete--on:hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.day-block__btn--on:hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.danger:hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.day-events-delete:hover:not(:disabled) .icon-hit__face,
+  button.icon-hit.day-block__btn--danger:hover:not(:disabled) .icon-hit__face {
+    transform: none;
+  }
+
+  .btn-primary:hover:not(:disabled),
+  .btn-secondary:hover:not(:disabled) {
+    transform: none;
+  }
+}

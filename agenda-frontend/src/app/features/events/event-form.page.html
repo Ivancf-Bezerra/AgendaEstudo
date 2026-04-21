@@ -1,0 +1,568 @@
+<section class="page">
+  <header class="page-head">
+    <button type="button" class="back icon-hit" appTooltip="Voltar pra agenda" tooltipPosition="right" aria-label="Voltar" (click)="goHome()">
+      <span class="icon-hit__face back__face">
+        <lucide-icon [img]="iconChevronLeft" [size]="24" strokeWidth="2.25" class="back__ic" />
+      </span>
+    </button>
+    <div>
+      <h1 class="page-title">{{ isEditing() ? 'Editar evento' : 'Novo evento' }}</h1>
+    </div>
+  </header>
+
+  <div class="card" aria-label="Formulário do evento" [formGroup]="form">
+    <div class="card-layout">
+      <div class="card-main">
+        <div class="card-day">
+          @if (selectedDay()) {
+            <p class="day-line">{{ selectedDayLabel() }}</p>
+          }
+        </div>
+
+        <div class="card-fields">
+          <label class="field">
+            <span class="label label--row">
+              <lucide-icon [img]="iconType" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+              <span>Título</span>
+            </span>
+            <input
+              class="input"
+              type="text"
+              formControlName="title"
+              autocomplete="off"
+              placeholder=""
+            />
+            @if (form.controls.title.touched && form.controls.title.hasError('required')) {
+              <span class="hint hint--error">Obrigatório</span>
+            }
+          </label>
+          <label class="field">
+            <span class="label label--row">
+              <lucide-icon [img]="iconHeading" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+              <span>Subtítulo</span>
+            </span>
+            <input
+              class="input"
+              type="text"
+              formControlName="subtitle"
+              autocomplete="off"
+              maxlength="160"
+              placeholder=""
+            />
+          </label>
+          <label class="field">
+            <span class="label label--row">
+              <lucide-icon [img]="iconFileText" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+              <span>Descrição</span>
+            </span>
+            <div class="description-toolbar" aria-label="Formatação da descrição">
+              <button
+                type="button"
+                class="description-format-btn"
+                [class.description-format-btn--active]="descriptionFormatState().bold"
+                [attr.aria-pressed]="descriptionFormatState().bold"
+                aria-label="Negrito"
+                (mousedown)="$event.preventDefault()"
+                (click)="applyDescriptionFormat('bold')"
+              >
+                <lucide-icon [img]="iconBold" [size]="16" strokeWidth="2.25" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                class="description-format-btn"
+                [class.description-format-btn--active]="descriptionFormatState().italic"
+                [attr.aria-pressed]="descriptionFormatState().italic"
+                aria-label="Itálico"
+                (mousedown)="$event.preventDefault()"
+                (click)="applyDescriptionFormat('italic')"
+              >
+                <lucide-icon [img]="iconItalic" [size]="16" strokeWidth="2.25" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                class="description-format-btn"
+                [class.description-format-btn--active]="descriptionFormatState().list"
+                [attr.aria-pressed]="descriptionFormatState().list"
+                aria-label="Lista"
+                (mousedown)="$event.preventDefault()"
+                (click)="applyDescriptionFormat('list')"
+              >
+                <lucide-icon [img]="iconList" [size]="16" strokeWidth="2.25" aria-hidden="true" />
+              </button>
+            </div>
+            <div
+              #descriptionArea
+              class="event-description-editor"
+              contenteditable="true"
+              spellcheck="true"
+              data-placeholder="Escreva aqui..."
+              (input)="onDescriptionInput()"
+              (keydown)="aoPressionarTeclaDescricao($event)"
+              (keyup)="onDescriptionSelectionChange()"
+              (blur)="aoPerderFocoDescricao()"
+              (click)="onDescriptionSelectionChange()"
+              (mouseup)="onDescriptionSelectionChange()"
+              (select)="onDescriptionSelectionChange()"
+            ></div>
+          </label>
+          <label class="field">
+            <span class="label label--row">
+              <lucide-icon [img]="iconTag" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+              <span>Tags</span>
+            </span>
+            <div class="tag-add-row">
+              <input
+                class="input tag-add-row__input"
+                type="text"
+                formControlName="tagDraft"
+                autocomplete="off"
+                maxlength="48"
+                placeholder=""
+                (keydown)="onTagDraftKeydown($event)"
+              />
+              <button
+                type="button"
+                class="btn-tag-add icon-hit"
+                appTooltip="Adicionar esta tag"
+                tooltipPosition="top"
+                aria-label="Adicionar tag"
+                [disabled]="tagAddDisabled()"
+                (click)="addTagFromDraft()"
+              >
+                <span class="icon-hit__face btn-tag-add__face">
+                  <lucide-icon [img]="iconPlus" [size]="22" strokeWidth="2.35" class="btn-tag-add__ic" aria-hidden="true" />
+                </span>
+              </button>
+            </div>
+            @if (eventTags().length) {
+              <ul class="tag-chips" aria-label="Tags adicionadas">
+                @for (tag of eventTags(); track $index) {
+                  <li class="tag-chip">
+                    <span class="tag-chip__text">{{ tag }}</span>
+                    <button
+                      type="button"
+                      class="tag-chip__rm"
+                      (click)="removeTag($index)"
+                      [attr.aria-label]="'Remover tag ' + tag"
+                    >
+                      ×
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </label>
+          <fieldset class="color-fieldset">
+            <legend class="label label--row color-fieldset__legend">
+              <lucide-icon [img]="iconPalette" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+              Cor do evento
+            </legend>
+            <div class="color-chips-wrap">
+              <div class="color-chips" role="radiogroup" aria-label="Cor do evento">
+                @for (p of colorPresets; track p.id) {
+                  <button
+                    type="button"
+                    class="color-chip"
+                    [class.color-chip--on]="form.controls.colorKey.value === p.id"
+                    [style.--chip-accent]="p.accent"
+                    (click)="pickColor(p.id)"
+                    [attr.aria-label]="p.label"
+                    [attr.aria-checked]="form.controls.colorKey.value === p.id"
+                    role="radio"
+                  >
+                    <span class="color-chip__dot" aria-hidden="true"></span>
+                  </button>
+                }
+              </div>
+            </div>
+          </fieldset>
+          <div class="save-actions">
+            <button
+              type="button"
+              class="btn btn-primary btn--row"
+              [appTooltip]="isEditing() ? 'Salvar e voltar pra agenda' : 'Salvar e voltar pra agenda'"
+              tooltipPosition="top"
+              [attr.aria-label]="isEditing() ? 'Guardar alterações' : 'Salvar evento'"
+              [disabled]="!canSave()"
+              (click)="save()"
+            >
+              <lucide-icon [img]="iconSave" [size]="20" strokeWidth="2.25" class="btn__ic" aria-hidden="true" />
+              <span>{{ isEditing() ? 'Guardar' : 'Salvar' }}</span>
+            </button>
+            @if (!isEditing()) {
+              <button
+                type="button"
+                class="btn btn-secondary btn--row"
+                appTooltip="Salvar este e abrir outro vazio no mesmo dia"
+                tooltipPosition="top"
+                aria-label="Salvar e adicionar outro"
+                [disabled]="!canSave()"
+                (click)="saveAndAddAnother()"
+              >
+                <lucide-icon [img]="iconListPlus" [size]="20" strokeWidth="2.25" class="btn__ic" aria-hidden="true" />
+                <span>Salvar e criar outro</span>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="card-cal" aria-label="Calendário e horário">
+        <div class="month-nav">
+          <button
+            type="button"
+            class="nav-btn icon-hit"
+            appTooltip="Mês anterior"
+            tooltipPosition="bottom"
+            [disabled]="!canGoPrevMonth()"
+            (click)="goPrevMonth()"
+            aria-label="Mês anterior"
+          >
+            <span class="icon-hit__face nav-btn__face">
+              <lucide-icon [img]="iconChevronLeft" [size]="22" strokeWidth="2.25" class="nav-btn__ic" />
+            </span>
+          </button>
+          <h2 class="month-title">{{ monthTitle() }}</h2>
+          <button
+            type="button"
+            class="nav-btn icon-hit"
+            appTooltip="Próximo mês"
+            tooltipPosition="bottom"
+            (click)="goNextMonth()"
+            aria-label="Próximo mês"
+          >
+            <span class="icon-hit__face nav-btn__face">
+              <lucide-icon [img]="iconChevronRight" [size]="22" strokeWidth="2.25" class="nav-btn__ic" />
+            </span>
+          </button>
+        </div>
+        <div class="dow" aria-hidden="true">
+          @for (w of weekdayLabels; track w) {
+            <span>{{ w }}</span>
+          }
+        </div>
+        <div class="grid" role="grid">
+          @for (c of monthGrid(); track c.key + ':' + c.date.getTime()) {
+            <button
+              type="button"
+              class="cell"
+              [class.cell--out]="!c.inMonth"
+              [class.cell--today]="isToday(c.date)"
+              [class.cell--active]="isSelectedDay(c.date)"
+              [class.cell--sunday]="isDomingo(c.date)"
+              [class.cell--saturday]="isSabado(c.date)"
+              [class.cell--past]="isPastCell(c.date)"
+              [disabled]="isPastCell(c.date)"
+              (click)="pickDay(c.date)"
+            >
+              <span class="cell-day">{{ c.date.getDate() }}</span>
+              <span class="dots" aria-hidden="true">
+                @for (_ of dotSlots(dotsFor(c.key)); track $index) {
+                  <span class="dot"></span>
+                }
+              </span>
+            </button>
+          }
+        </div>
+
+        <div class="card-cal__time" [class.field-time--disabled]="!selectedDay()">
+          <div class="label label--row time-split-head" id="event-time-label">
+            <lucide-icon [img]="iconClock" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+            <span>Horário</span>
+          </div>
+          <div class="time-clock-panel" [style.--time-accent]="timePanelAccent()">
+            <div class="time-split" role="group" aria-labelledby="event-time-label">
+              <div class="time-slot">
+                <label class="field field-time-slot">
+                  <span class="time-slot__lbl">Início</span>
+                  <input type="hidden" formControlName="startTime" />
+                  <div
+                    class="time-segmented"
+                    [class.time-segmented--invalid]="timeFieldInvalid('startTime')"
+                    role="group"
+                    [attr.aria-invalid]="timeFieldInvalid('startTime')"
+                  >
+                    <div class="time-segmented__lcd">
+                      <div class="time-segmented__window">
+                        <span class="time-segmented__sub">Hora</span>
+                        <input
+                          class="time-segmented__digits"
+                          type="text"
+                          inputmode="numeric"
+                          maxlength="2"
+                          autocomplete="off"
+                          spellcheck="false"
+                          [value]="timeUi().start.h"
+                          [disabled]="!selectedDay() || form.controls.startTime.disabled"
+                          [attr.aria-label]="'Hora de começo'"
+                          (input)="onTimeDigitInput('start', 'h', $event)"
+                          (blur)="onTimeDigitBlur('start')"
+                        />
+                      </div>
+                      <span class="time-segmented__divider" aria-hidden="true"></span>
+                      <span class="time-segmented__colon" aria-hidden="true">:</span>
+                      <span class="time-segmented__divider" aria-hidden="true"></span>
+                      <div class="time-segmented__window">
+                        <span class="time-segmented__sub">Min</span>
+                        <input
+                          class="time-segmented__digits"
+                          type="text"
+                          inputmode="numeric"
+                          maxlength="2"
+                          autocomplete="off"
+                          spellcheck="false"
+                          [value]="timeUi().start.m"
+                          [disabled]="!selectedDay() || form.controls.startTime.disabled"
+                          [attr.aria-label]="'Minutos de começo'"
+                          (input)="onTimeDigitInput('start', 'm', $event)"
+                          (blur)="onTimeDigitBlur('start')"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  @if (timeFieldInvalid('startTime')) {
+                    <span class="hint hint--error">Hora inválida</span>
+                  }
+                </label>
+              </div>
+              <div class="time-slot">
+                <label class="field field-time-slot">
+                  <span class="time-slot__lbl">Fim</span>
+                  <input type="hidden" formControlName="endTime" />
+                  <div
+                    class="time-segmented"
+                    [class.time-segmented--invalid]="timeFieldInvalid('endTime')"
+                    role="group"
+                    [attr.aria-invalid]="timeFieldInvalid('endTime')"
+                  >
+                    <div class="time-segmented__lcd">
+                      <div class="time-segmented__window">
+                        <span class="time-segmented__sub">Hora</span>
+                        <input
+                          class="time-segmented__digits"
+                          type="text"
+                          inputmode="numeric"
+                          maxlength="2"
+                          autocomplete="off"
+                          spellcheck="false"
+                          [value]="timeUi().end.h"
+                          [disabled]="!selectedDay() || form.controls.endTime.disabled"
+                          [attr.aria-label]="'Hora de fim'"
+                          (input)="onTimeDigitInput('end', 'h', $event)"
+                          (blur)="onTimeDigitBlur('end')"
+                        />
+                      </div>
+                      <span class="time-segmented__divider" aria-hidden="true"></span>
+                      <span class="time-segmented__colon" aria-hidden="true">:</span>
+                      <span class="time-segmented__divider" aria-hidden="true"></span>
+                      <div class="time-segmented__window">
+                        <span class="time-segmented__sub">Min</span>
+                        <input
+                          class="time-segmented__digits"
+                          type="text"
+                          inputmode="numeric"
+                          maxlength="2"
+                          autocomplete="off"
+                          spellcheck="false"
+                          [value]="timeUi().end.m"
+                          [disabled]="!selectedDay() || form.controls.endTime.disabled"
+                          [attr.aria-label]="'Minutos de fim'"
+                          (input)="onTimeDigitInput('end', 'm', $event)"
+                          (blur)="onTimeDigitBlur('end')"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  @if (timeFieldInvalid('endTime')) {
+                    <span class="hint hint--error">Hora inválida</span>
+                  }
+                  @if (orderTimeInvalid() && !timeFieldInvalid('endTime') && !timeFieldInvalid('startTime')) {
+                    <span class="hint hint--error">Fim antes do começo</span>
+                  }
+                  @if (overlapWithOtherEvent() && !timeFieldInvalid('endTime') && !timeFieldInvalid('startTime') && !orderTimeInvalid()) {
+                    <span class="hint hint--error">Horário ocupado</span>
+                  }
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card--day-events" aria-label="Outros eventos neste dia">
+    <div class="day-events-head">
+      <h2 class="day-events-title">
+        <lucide-icon [img]="iconDayEvents" [size]="20" strokeWidth="2.1" class="day-events-title__ic" aria-hidden="true" />
+        Eventos neste dia
+      </h2>
+    </div>
+
+    @if (selectedDay()) {
+      @if (eventsForSelectedDay().length === 0) {
+        <p class="day-events-empty">Sem eventos</p>
+      } @else {
+        <ul class="day-events-list">
+        @for (ev of eventsForSelectedDay(); track ev.id) {
+          <li
+            class="day-events-row"
+            [class.day-events-row--done]="!!ev.completed"
+            [style.--card-accent]="eventAccent(ev)"
+          >
+            <div class="day-events-main">
+              <p class="day-events-name">{{ ev.title }}</p>
+              @if (ev.subtitle) {
+                <p class="day-events-sub">{{ ev.subtitle }}</p>
+              }
+              @if (ev.description) {
+                <p class="day-events-desc">{{ eventCardSummary(ev.description) }}</p>
+              }
+              <p class="day-events-time">{{ formatEventRange(ev) }}</p>
+              @if (ev.tags?.length) {
+                <ul class="day-events-tags">
+                  @for (tg of ev.tags; track tg) {
+                    <li class="day-events-tag">{{ tg }}</li>
+                  }
+                </ul>
+              }
+            </div>
+            <div class="day-events-actions">
+              <button
+                type="button"
+                class="day-events-edit icon-hit"
+                appTooltip="Editar"
+                tooltipPosition="left"
+                aria-label="Editar evento"
+                (click)="openDayEventEdit($event, ev.id)"
+              >
+                <span class="icon-hit__face">
+                  <lucide-icon [img]="iconPencil" [size]="20" strokeWidth="2.25" />
+                </span>
+              </button>
+              <button
+                type="button"
+                class="day-events-complete icon-hit"
+                [class.day-events-complete--on]="!!ev.completed"
+                [appTooltip]="ev.completed ? 'Marcar de novo como pendente' : 'Marcar como feito'"
+                tooltipPosition="left"
+                (click)="toggleDayEventComplete(ev)"
+                [attr.aria-pressed]="!!ev.completed"
+                [attr.aria-label]="ev.completed ? 'Marcar como pendente' : 'Marcar como feito'"
+              >
+                <span class="icon-hit__face">
+                  @if (ev.completed) {
+                    <lucide-icon [img]="iconCheck" [size]="20" strokeWidth="2.5" class="day-events-complete__ic" />
+                  } @else {
+                    <lucide-icon [img]="iconCircle" [size]="18" strokeWidth="2" class="day-events-complete__ic day-events-complete__ic--todo" />
+                  }
+                </span>
+              </button>
+              <button
+                type="button"
+                class="day-events-delete icon-hit"
+                appTooltip="Apagar evento"
+                tooltipPosition="left"
+                (click)="deleteDayEvent(ev.id)"
+                aria-label="Apagar evento"
+              >
+                <span class="icon-hit__face">
+                  <lucide-icon [img]="iconTrash" [size]="20" strokeWidth="2" />
+                </span>
+              </button>
+            </div>
+          </li>
+        }
+        </ul>
+      }
+    }
+  </div>
+
+  @if (postSaveIntegrationOpen()) {
+    <div class="post-save-host" aria-hidden="false">
+      <div
+        class="post-save-backdrop"
+        role="presentation"
+        (click)="dismissPostSaveIntegration()"
+      ></div>
+      <div
+        class="post-save-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="post-save-integration-title"
+      >
+      <h2 id="post-save-integration-title" class="post-save-dialog__title">Integrar a mais dias?</h2>
+      <p class="post-save-dialog__lead">
+        Escolha como replicar este evento nos outros dias válidos da semana atual.
+      </p>
+      <div class="post-save-dialog__modes" role="group" aria-label="Modo de replicação">
+        <button
+          type="button"
+          class="post-save-mode-btn"
+          [class.post-save-mode-btn--on]="isPostSaveIntegrationMode('all')"
+          (click)="setPostSaveIntegrationMode('all')"
+        >
+          Todos os dias
+        </button>
+        <button
+          type="button"
+          class="post-save-mode-btn"
+          [class.post-save-mode-btn--on]="isPostSaveIntegrationMode('weekdays')"
+          (click)="setPostSaveIntegrationMode('weekdays')"
+        >
+          Seg-Sexta
+        </button>
+        <button
+          type="button"
+          class="post-save-mode-btn"
+          [class.post-save-mode-btn--on]="isPostSaveIntegrationMode('weekend')"
+          (click)="setPostSaveIntegrationMode('weekend')"
+        >
+          Sab-Dom
+        </button>
+        <button
+          type="button"
+          class="post-save-mode-btn"
+          [class.post-save-mode-btn--on]="isPostSaveIntegrationMode('custom')"
+          (click)="setPostSaveIntegrationMode('custom')"
+        >
+          Escolher dias da semana
+        </button>
+      </div>
+
+      @if (isPostSaveIntegrationMode('custom')) {
+        <div class="post-save-weekdays" aria-label="Selecionar dias da semana">
+          @for (wd of [1,2,3,4,5,6,0]; track wd) {
+            <button
+              type="button"
+              class="post-save-weekday-btn"
+              [class.post-save-weekday-btn--on]="isPostSaveIntegrationWeekday(wd)"
+              [attr.aria-pressed]="isPostSaveIntegrationWeekday(wd)"
+              (click)="togglePostSaveIntegrationWeekday(wd)"
+            >
+              {{ postSaveWeekdayLabel(wd) }}
+            </button>
+          }
+        </div>
+      }
+
+      <p class="post-save-dialog__summary" aria-live="polite">
+        {{ postSaveIntegrationSelected().size }} de {{ postSaveSelectableCount() }} dia(s) válidos serão adicionados.
+      </p>
+      <div class="post-save-dialog__actions">
+        <button type="button" class="btn btn-secondary btn--row" (click)="dismissPostSaveIntegration()">
+          Não agora
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn--row"
+          [disabled]="postSaveIntegrationSelected().size === 0"
+          (click)="confirmPostSaveIntegration()"
+        >
+          Adicionar aos dias marcados
+        </button>
+      </div>
+    </div>
+    </div>
+  }
+</section>

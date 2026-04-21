@@ -1,0 +1,251 @@
+:host {
+  display: contents;
+}
+
+.qnp-root {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem max(1rem, env(safe-area-inset-right)) max(7.75rem, calc(1rem + env(safe-area-inset-bottom)))
+    max(1rem, env(safe-area-inset-left));
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.qnp-scrim {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  background: color-mix(in srgb, var(--surface-1) 52%, transparent);
+}
+
+.qnp-panel {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+  width: min(calc(100vw - 1.75rem), min(42rem, var(--miolo-max, 72rem)));
+  max-height: min(80dvh, 36rem);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  font-family: var(--font-ui);
+}
+
+.qnp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  padding: clamp(0.8rem, 2.2vw, 1rem) clamp(0.9rem, 2.5vw, 1.15rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+  background: color-mix(in srgb, var(--surface-3) 20%, var(--surface-2));
+}
+
+.qnp-head__main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.qnp-head__ic {
+  flex-shrink: 0;
+  color: var(--note-accent);
+}
+
+.qnp-title {
+  margin: 0;
+  font-size: clamp(1.02rem, 2.2vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
+.qnp-close.icon-hit {
+  box-sizing: border-box;
+  width: var(--btn-icon-size-dense);
+  height: var(--btn-icon-size-dense);
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.qnp-close lucide-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+}
+
+.qnp-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0.52rem clamp(0.85rem, 2.5vw, 1rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+  background: color-mix(in srgb, var(--surface-3) 42%, var(--surface-2));
+  flex-shrink: 0;
+}
+
+.qnp-tool {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+  background: color-mix(in srgb, var(--surface-2) 94%, var(--surface-3));
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.qnp-tool:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--border));
+  color: var(--text);
+  background: color-mix(in srgb, var(--surface-3) 48%, var(--surface-2));
+}
+
+.qnp-tool:active:not(:disabled) {
+  background: color-mix(in srgb, var(--surface-3) 62%, var(--surface-2));
+}
+
+.qnp-tool--active {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  background: color-mix(in srgb, var(--accent) 30%, var(--surface-2));
+  color: color-mix(in srgb, var(--text) 94%, var(--accent));
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--accent) 24%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 28%, transparent);
+}
+
+.qnp-editor {
+  --notebook-rule: color-mix(in srgb, #8a8278 26%, transparent);
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  align-self: stretch;
+  min-width: 0;
+  min-height: clamp(12rem, 40vh, 19rem);
+  max-height: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  margin: clamp(0.62rem, 1.8vw, 0.85rem) clamp(0.85rem, 2.5vw, 1.1rem) 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
+  border-radius: var(--radius-md);
+  border-bottom-width: 2px;
+  padding: 0.52rem 0.56rem 1rem;
+  background-color: color-mix(in srgb, var(--surface-2) 96%, transparent);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--notebook-line, 1.55rem) - 1px),
+    var(--notebook-rule) calc(var(--notebook-line, 1.55rem) - 1px),
+    var(--notebook-rule) var(--notebook-line, 1.55rem)
+  );
+  background-size: 100% var(--notebook-line, 1.55rem);
+  background-repeat: repeat;
+  background-attachment: local;
+  background-position: 0 0.2rem;
+  box-shadow:
+    inset 2px 0 0 0 var(--margin-line),
+    0 1px 0 color-mix(in srgb, #fff 38%, transparent);
+  outline: none;
+  font-size: 1rem;
+  font-weight: 520;
+  line-height: var(--notebook-line, 1.55rem);
+}
+
+.qnp-editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.qnp-editor:focus,
+.qnp-editor:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--border));
+  outline: none;
+  box-shadow:
+    inset 2px 0 0 0 color-mix(in srgb, var(--margin-line) 82%, var(--accent)),
+    0 1px 0 color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+:root.dark .qnp-editor {
+  --notebook-rule: color-mix(in srgb, #8b9bb0 24%, transparent);
+}
+
+/* Hierarquia tipográfica da nota (mesma linguagem da criação de evento). */
+.qnp-editor p {
+  margin: 0 0 0.55rem;
+}
+
+.qnp-editor p:last-child {
+  margin-bottom: 0;
+}
+
+.qnp-editor strong,
+.qnp-editor b {
+  font-weight: 730;
+  color: color-mix(in srgb, var(--text) 92%, var(--accent) 8%);
+}
+
+.qnp-editor em,
+.qnp-editor i {
+  font-style: italic;
+  color: color-mix(in srgb, var(--text) 78%, var(--muted));
+}
+
+.qnp-editor ul,
+.qnp-editor ol {
+  margin: 0.15rem 0 0.65rem;
+  padding-left: 1.2rem;
+}
+
+.qnp-editor li {
+  margin: 0.2rem 0;
+}
+
+.qnp-hint {
+  margin: 0 clamp(0.85rem, 2.5vw, 1.1rem) clamp(0.75rem, 2vw, 1rem);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+@media (min-width: 560px) {
+  .qnp-root {
+    align-items: center;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qnp-tool:hover:not(:disabled),
+  .qnp-tool:active:not(:disabled) {
+    transform: none;
+  }
+}

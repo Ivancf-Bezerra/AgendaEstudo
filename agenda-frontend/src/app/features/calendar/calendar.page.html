@@ -1,0 +1,340 @@
+<section class="head">
+  <div class="segments" role="tablist" aria-label="Como ver a agenda">
+    <button
+      type="button"
+      class="icon-hit"
+      role="tab"
+      appTooltip="Ver um dia"
+      tooltipPosition="bottom"
+      [attr.aria-selected]="view() === 'day'"
+      (click)="setView('day')"
+      aria-label="Dia"
+    >
+      <span class="icon-hit__face segments-tab__face">
+        <lucide-icon [img]="iconDay" [size]="22" strokeWidth="2" class="seg-ic" />
+      </span>
+    </button>
+    <button
+      type="button"
+      class="icon-hit"
+      role="tab"
+      appTooltip="Ver a semana"
+      tooltipPosition="bottom"
+      [attr.aria-selected]="view() === 'week'"
+      (click)="setView('week')"
+      aria-label="Semana"
+    >
+      <span class="icon-hit__face segments-tab__face">
+        <lucide-icon [img]="iconWeek" [size]="22" strokeWidth="2" class="seg-ic" />
+      </span>
+    </button>
+    <button
+      type="button"
+      class="icon-hit"
+      role="tab"
+      appTooltip="O mês"
+      tooltipPosition="bottom"
+      [attr.aria-selected]="view() === 'month'"
+      (click)="setView('month')"
+      aria-label="Mês"
+    >
+      <span class="icon-hit__face segments-tab__face">
+        <lucide-icon [img]="iconMonth" [size]="22" strokeWidth="2" class="seg-ic" />
+      </span>
+    </button>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="nav-btn icon-hit" appTooltip="Período anterior" tooltipPosition="bottom" (click)="goPrev()" aria-label="Anterior">
+      <span class="icon-hit__face nav-btn__face">
+        <lucide-icon [img]="iconPrev" [size]="24" strokeWidth="2.25" class="nav-ic" />
+      </span>
+    </button>
+    <h2 class="nav-title">{{ title() }}</h2>
+    <button type="button" class="nav-btn icon-hit" appTooltip="Avançar" tooltipPosition="bottom" (click)="goNext()" aria-label="Próximo">
+      <span class="icon-hit__face nav-btn__face">
+        <lucide-icon [img]="iconNext" [size]="24" strokeWidth="2.25" class="nav-ic" />
+      </span>
+    </button>
+  </div>
+</section>
+
+@if (view() === 'week') {
+  <div class="week-chips" role="tablist" aria-label="Dias da semana atual">
+    @for (d of weekRangeLabels(); track d.offset) {
+      <button
+        type="button"
+        class="chip"
+        [class.chip--active]="d.active"
+        [class.chip--sunday]="d.domingo"
+        [class.chip--saturday]="d.sabado"
+        (click)="pickWeekDay(d.offset)"
+      >
+        <span class="chip-label">{{ d.label }}</span>
+        <span class="chip-sub">{{ d.sub }}</span>
+      </button>
+    }
+  </div>
+}
+
+@if (view() === 'month') {
+  <div class="month">
+    <div class="dow" aria-hidden="true">
+      @for (w of weekdayLabels; track w) {
+        <span>{{ w }}</span>
+      }
+    </div>
+    <div class="grid" role="grid">
+      @for (c of monthGrid(); track c.key + ':' + c.date.getTime()) {
+        <button
+          type="button"
+          class="cell"
+          [class.cell--out]="!c.inMonth"
+          [class.cell--active]="isAnchorDay(c.date)"
+          [class.cell--sunday]="isDomingo(c.date)"
+          [class.cell--saturday]="isSabado(c.date)"
+          [appDayHoverCard]="c.key"
+          (click)="pickDay(c.date)"
+        >
+          <span class="cell-day">{{ c.date.getDate() }}</span>
+          <span class="dots" aria-hidden="true">
+            @for (_ of dotSlots(dotsFor(c.key)); track $index) {
+              <span class="dot"></span>
+            }
+            @if (noteCountFor(c.key) > 0) {
+              <span class="dot dot--note" [attr.title]="noteCountFor(c.key) + ' nota(s)'"></span>
+            }
+          </span>
+        </button>
+      }
+    </div>
+  </div>
+}
+
+<section class="list" [attr.aria-label]="'Eventos do dia'">
+  <div class="list-head">
+    <div class="list-head__titles">
+      <h3 class="list-title">
+        <lucide-icon
+          [img]="listEventsIcon()"
+          [size]="20"
+          strokeWidth="2.1"
+          class="list-title__ic"
+          aria-hidden="true"
+        />
+        Eventos do dia
+      </h3>
+      <p class="list-anchor-day">{{ anchorDayTitle() }}</p>
+    </div>
+  </div>
+
+  @if (filteredEvents().length === 0) {
+    <p class="empty">
+      <lucide-icon [img]="iconCalendarPlus" [size]="20" strokeWidth="2" class="empty__ic" aria-hidden="true" />
+      <span>Sem eventos neste dia</span>
+    </p>
+  } @else {
+    <ul class="cards" aria-label="Lista de eventos do dia">
+      @for (ev of filteredEvents(); track ev.id) {
+        <li
+          class="card"
+          [class.card--done]="!!ev.completed"
+          [style.--card-accent]="eventAccent(ev)"
+          [attr.data-scroll-list-first]="ev.id === firstVisibleEventId() ? ev.id : null"
+          [attr.title]="cardTagsTooltip(ev)"
+          (click)="onEventCardClick($event, ev)"
+        >
+          <div class="card-main">
+            @if (cardSummaryLine(ev); as summary) {
+              <p class="card-line" [attr.title]="ev.title + ' · ' + summary">
+                <span class="card-line__title">{{ ev.title }}</span>
+                <span class="card-line__sep" aria-hidden="true"> · </span>
+                <span class="card-line__sum">{{ summary }}</span>
+              </p>
+            } @else {
+              <p class="card-line" [attr.title]="ev.title">
+                <span class="card-line__title">{{ ev.title }}</span>
+              </p>
+            }
+          </div>
+          @if (eventCardTimeParts(ev); as t) {
+            <div
+              class="card-time"
+              [style.--time-accent]="eventAccent(ev)"
+              [attr.aria-label]="'Horário: ' + formatEventRange(ev)"
+            >
+              <div class="card-time__lcd">
+                <div class="card-time__segment">
+                  <span class="card-time__label">Início</span>
+                  <div class="card-time__row">
+                    <span class="card-time__digits">{{ t.sh }}</span>
+                    <span class="card-time__colon" aria-hidden="true">:</span>
+                    <span class="card-time__digits">{{ t.sm }}</span>
+                  </div>
+                </div>
+                @if (t.eh !== undefined && t.em !== undefined) {
+                  <span class="card-time__sep" aria-hidden="true">–</span>
+                  <div class="card-time__segment">
+                    <span class="card-time__label">Fim</span>
+                    <div class="card-time__row">
+                      <span class="card-time__digits">{{ t.eh }}</span>
+                      <span class="card-time__colon" aria-hidden="true">:</span>
+                      <span class="card-time__digits">{{ t.em }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          <div class="card-actions">
+            <button
+              type="button"
+              class="card-edit icon-hit"
+              appTooltip="Editar"
+              tooltipPosition="left"
+              aria-label="Editar evento"
+              (click)="openEventEdit($event, ev.id)"
+            >
+              <span class="icon-hit__face">
+                <lucide-icon [img]="iconPencil" [size]="22" strokeWidth="2.25" />
+              </span>
+            </button>
+            <button
+              type="button"
+              class="complete icon-hit"
+              [class.complete--on]="!!ev.completed"
+              [appTooltip]="ev.completed ? 'Voltar como pendente' : 'Marcar como feito'"
+              tooltipPosition="left"
+              (click)="toggleComplete(ev)"
+              [attr.aria-pressed]="!!ev.completed"
+              [attr.aria-label]="ev.completed ? 'Marcar como pendente' : 'Marcar como feito'"
+            >
+              <span class="icon-hit__face">
+                @if (ev.completed) {
+                  <lucide-icon [img]="iconCheck" [size]="22" strokeWidth="2.5" class="complete__ic" />
+                } @else {
+                  <lucide-icon [img]="iconCircle" [size]="20" strokeWidth="2.1" class="complete__ic complete__ic--todo" />
+                }
+              </span>
+            </button>
+            <button
+              type="button"
+              class="danger icon-hit"
+              appTooltip="Apagar"
+              tooltipPosition="left"
+              (click)="deleteEvent(ev.id)"
+              aria-label="Apagar evento"
+            >
+              <span class="icon-hit__face">
+                <lucide-icon [img]="iconTrash" [size]="22" strokeWidth="2.1" />
+              </span>
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</section>
+
+@if (dayDetailEvent(); as ev) {
+  <div class="day-detail-root" aria-live="polite" role="presentation">
+    <button
+      type="button"
+      class="day-detail-scrim"
+      (click)="closeDayDetail()"
+      (wheel)="onDayDetailBackdropWheel($event)"
+      aria-label="Fechar"
+    ></button>
+    <div
+      class="day-detail-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="day-detail-title"
+      [attr.aria-describedby]="'day-detail-meta day-detail-desc-block'"
+      [style.--detail-accent]="eventAccent(ev)"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="day-detail-dialog__inner">
+        <header class="day-detail-header">
+          <div class="day-detail-header__main">
+            <h2 id="day-detail-title" class="day-detail-page-title">{{ ev.title }}</h2>
+            <div class="day-detail-header__status">
+              @if (ev.completed) {
+                <span class="day-detail-status">Feito</span>
+              } @else {
+                <span class="day-detail-status day-detail-status--todo">Pendente</span>
+              }
+            </div>
+          </div>
+          <button type="button" class="day-detail-close icon-hit" (click)="closeDayDetail()" aria-label="Fechar">
+            <span class="icon-hit__face day-detail-close__face">
+              <lucide-icon [img]="iconClose" [size]="22" strokeWidth="2.25" aria-hidden="true" />
+            </span>
+          </button>
+        </header>
+        <div class="day-detail-sheet">
+          <div class="day-detail-fields">
+            <section class="field" aria-label="Horário">
+              <span class="label label--row">
+                <lucide-icon [img]="iconClock" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+                <span>Horário</span>
+              </span>
+              <p id="day-detail-meta" class="day-detail-value">{{ formatEventRange(ev) }}</p>
+            </section>
+            @if (ev.subtitle) {
+              <section class="field" aria-label="Subtítulo">
+                <span class="label label--row">
+                  <lucide-icon [img]="iconHeading" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+                  <span>Subtítulo</span>
+                </span>
+                <p class="day-detail-value">{{ ev.subtitle }}</p>
+              </section>
+            }
+            <section class="field field--day-detail-notes" aria-label="Descrição">
+              <span class="label label--row">
+                <lucide-icon [img]="iconFileText" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+                <span>Descrição</span>
+              </span>
+              <p id="day-detail-desc-block" class="day-detail-desc" [innerHTML]="dayDetailDescription(ev)"></p>
+            </section>
+            @if (ev.tags?.length) {
+              <section class="field" aria-label="Tags">
+                <span class="label label--row">
+                  <lucide-icon [img]="iconTag" [size]="16" strokeWidth="2.25" class="label__ic" aria-hidden="true" />
+                  <span>Tags</span>
+                </span>
+                <ul class="tag-chips day-detail-tag-chips">
+                  @for (tg of ev.tags; track tg) {
+                    <li class="tag-chip"><span class="tag-chip__text">{{ tg }}</span></li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
+        </div>
+        <footer class="day-detail-footer">
+          <div class="day-detail-footer__actions">
+            <button type="button" class="btn btn-primary day-detail-footer__btn" (click)="editEventFromDetail(ev.id)">
+              <lucide-icon [img]="iconPencil" [size]="17" strokeWidth="2.2" class="btn__ic" aria-hidden="true" />
+              <span>Editar evento</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary day-detail-footer__btn"
+              (click)="toggleCompleteInDetail(ev)"
+              [attr.aria-pressed]="!!ev.completed"
+            >
+              @if (ev.completed) {
+                <lucide-icon [img]="iconCircle" [size]="17" strokeWidth="2.2" class="btn__ic" aria-hidden="true" />
+                <span>Marcar como pendente</span>
+              } @else {
+                <lucide-icon [img]="iconCheck" [size]="17" strokeWidth="2.2" class="btn__ic" aria-hidden="true" />
+                <span>Marcar como feito</span>
+              }
+            </button>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+}

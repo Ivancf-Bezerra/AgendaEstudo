@@ -1,0 +1,51 @@
+name: Update Docs Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-sync-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: agenda-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: agenda-frontend
+        run: npm ci
+
+      - name: Build web for GitHub Pages
+        working-directory: agenda-frontend
+        run: npm run build -- --base-href /AgendaEstudo/
+
+      - name: Sync dist to docs
+        run: |
+          rm -rf docs
+          mkdir -p docs
+          cp -R agenda-frontend/dist/agenda-frontend/browser/. docs/
+          cp docs/index.html docs/404.html
+
+      - name: Commit docs changes
+        run: |
+          git add docs
+          if git diff --cached --quiet; then
+            echo "Sem mudanças em docs."
+            exit 0
+          fi
+          GIT_AUTHOR_NAME="github-actions[bot]" GIT_AUTHOR_EMAIL="41898282+github-actions[bot]@users.noreply.github.com" GIT_COMMITTER_NAME="github-actions[bot]" GIT_COMMITTER_EMAIL="41898282+github-actions[bot]@users.noreply.github.com" git commit -m "chore: atualizar docs build"
+          git push

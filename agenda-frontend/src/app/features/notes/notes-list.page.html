@@ -1,0 +1,53 @@
+<section class="page">
+  <header class="page-head">
+    <a routerLink="/" class="back-link">← Agenda</a>
+    <div>
+      <h1 class="page-title">
+        <lucide-icon [img]="iconNote" [size]="24" strokeWidth="2" class="page-title__ic" aria-hidden="true" />
+        Notas
+      </h1>
+      <p class="page-sub">Todas as notas, por mês. Cartões quadrados — clique num cartão para editar no bloco rápido.</p>
+    </div>
+  </header>
+
+  @if (monthGroups().length === 0) {
+    <p class="empty">Ainda não há notas. Use o ícone do bloco na agenda.</p>
+  } @else {
+    @for (g of monthGroups(); track g.key) {
+      <section class="month-block" [attr.aria-labelledby]="'month-' + g.key">
+        <h2 class="month-title" [id]="'month-' + g.key">{{ g.title }}</h2>
+        <ul class="note-grid" role="list">
+          @for (n of g.notes; track n.id) {
+            <li class="note-card" [id]="cardHostId(n.id)" [class.note-card--focus]="focusId() === n.id">
+              <div class="note-card__head" (click)="onHeadClick($event, n.id)">
+                <p class="note-card__title" [attr.title]="tituloCartao(n.bodyHtml)">{{ tituloCartao(n.bodyHtml) }}</p>
+                <div class="note-card__actions" (click)="$event.stopPropagation()">
+                  <button type="button" class="note-card__icon-btn note-card__icon-btn--edit" aria-label="Editar nota" (click)="openEdit(n.id)">
+                    <lucide-icon [img]="iconPencil" [size]="18" strokeWidth="2.25" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    class="note-card__icon-btn note-card__icon-btn--delete"
+                    aria-label="Eliminar nota"
+                    (click)="excluirNota($event, n.id)"
+                  >
+                    <lucide-icon [img]="iconTrash" [size]="18" strokeWidth="2.25" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="note-card__open"
+                [attr.aria-label]="'Editar nota de ' + formatCreated(n)"
+                (click)="openEdit(n.id)"
+              >
+                <p class="note-card__preview">{{ preview(n.bodyHtml) }}</p>
+                <p class="note-card__meta">{{ formatCreated(n) }}</p>
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</section>

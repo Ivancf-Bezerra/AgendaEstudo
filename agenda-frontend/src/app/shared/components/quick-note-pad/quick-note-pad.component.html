@@ -1,0 +1,71 @@
+@if (quickNoteUi.open()) {
+  <div class="qnp-root" role="presentation">
+    <button type="button" class="qnp-scrim" (click)="close()" aria-label="Fechar bloco de notas"></button>
+    <div class="qnp-panel" role="dialog" aria-modal="true" aria-labelledby="qnp-title" (click)="$event.stopPropagation()">
+      <header class="qnp-head">
+        <div class="qnp-head__main">
+          <lucide-icon [img]="iconNote" [size]="20" strokeWidth="2.1" class="qnp-head__ic" aria-hidden="true" />
+          <h2 id="qnp-title" class="qnp-title">Bloco de notas</h2>
+        </div>
+        <button type="button" class="qnp-close icon-hit" (click)="close()" aria-label="Fechar">
+          <span class="icon-hit__face qnp-close__face">
+            <lucide-icon [img]="iconClose" [size]="22" strokeWidth="2.25" />
+          </span>
+        </button>
+      </header>
+      <div class="qnp-toolbar" aria-label="Formatação">
+        <button
+          type="button"
+          class="qnp-tool"
+          [class.qnp-tool--active]="estadoFormatacao().bold"
+          [attr.aria-pressed]="estadoFormatacao().bold"
+          (mousedown)="$event.preventDefault()"
+          (click)="exec('bold')"
+          aria-label="Negrito"
+        >
+          <lucide-icon [img]="iconBold" [size]="18" strokeWidth="2.25" />
+        </button>
+        <button
+          type="button"
+          class="qnp-tool"
+          [class.qnp-tool--active]="estadoFormatacao().italic"
+          [attr.aria-pressed]="estadoFormatacao().italic"
+          (mousedown)="$event.preventDefault()"
+          (click)="exec('italic')"
+          aria-label="Itálico"
+        >
+          <lucide-icon [img]="iconItalic" [size]="18" strokeWidth="2.25" />
+        </button>
+        <button
+          type="button"
+          class="qnp-tool"
+          [class.qnp-tool--active]="estadoFormatacao().list"
+          [attr.aria-pressed]="estadoFormatacao().list"
+          (mousedown)="$event.preventDefault()"
+          (click)="exec('insertUnorderedList')"
+          aria-label="Lista"
+        >
+          <lucide-icon [img]="iconList" [size]="18" strokeWidth="2.25" />
+        </button>
+      </div>
+      <div
+        #editor
+        class="qnp-editor"
+        contenteditable="true"
+        spellcheck="true"
+        data-placeholder="Escreva aqui… (guarda sozinho quando há texto)"
+        (input)="onInput()"
+        (blur)="aoPerderFocoEditor()"
+        (keydown)="aoPressionarTeclaEditor($event)"
+        (keyup)="aoMudarSelecaoEditor()"
+        (click)="aoMudarSelecaoEditor()"
+        (mouseup)="aoMudarSelecaoEditor()"
+        (select)="aoMudarSelecaoEditor()"
+        (mousedown)="onEditorMouseDown($event)"
+      ></div>
+      @if (savedHint()) {
+        <p class="qnp-hint">{{ savedHint() }}</p>
+      }
+    </div>
+  </div>
+}

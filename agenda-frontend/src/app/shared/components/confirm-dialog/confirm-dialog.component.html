@@ -1,0 +1,35 @@
+@if (dialogo.aberto()) {
+  <div class="confirm-root" role="presentation">
+    <button
+      type="button"
+      class="confirm-scrim"
+      (click)="dialogo.cancelar()"
+      aria-label="Fechar"
+    ></button>
+    <div
+      class="confirm-panel"
+      role="alertdialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'confirm-dialog-title'"
+      [attr.aria-describedby]="'confirm-dialog-desc'"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 id="confirm-dialog-title" class="confirm-title">{{ dialogo.titulo() }}</h2>
+      <p id="confirm-dialog-desc" class="confirm-desc">{{ dialogo.mensagem() }}</p>
+      <div class="confirm-actions">
+        <button type="button" class="btn btn-secondary" (click)="dialogo.cancelar()">
+          {{ dialogo.textoCancelar() }}
+        </button>
+        <button
+          type="button"
+          class="btn"
+          [class.btn-primary]="!dialogo.variantePerigo()"
+          [class.confirm-btn--danger]="dialogo.variantePerigo()"
+          (click)="dialogo.confirmar()"
+        >
+          {{ dialogo.textoConfirmar() }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

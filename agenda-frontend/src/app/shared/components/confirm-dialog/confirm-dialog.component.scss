@@ -1,0 +1,71 @@
+.confirm-root {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.confirm-scrim {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background: color-mix(in srgb, #0a0c10 52%, transparent);
+}
+
+.confirm-panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 22rem);
+  padding: 1.25rem 1.35rem 1.2rem;
+  border-radius: var(--radius-lg, 0.85rem);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  box-shadow: var(--shadow, 0 12px 40px rgba(0, 0, 0, 0.2));
+}
+
+.confirm-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.confirm-desc {
+  margin: 0 0 1.1rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.confirm-btn--danger {
+  border-color: var(--btn-danger-solid-border);
+  background: color-mix(in srgb, var(--danger) 90%, #1a0505);
+  color: #fff;
+  box-shadow: var(--btn-danger-shadow), var(--btn-inset-highlight);
+}
+
+.confirm-btn--danger:hover:not(:disabled) {
+  color: #fff;
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: var(--btn-danger-shadow-hover), var(--btn-inset-highlight-hover);
+}
+
+.confirm-btn--danger:active:not(:disabled) {
+  color: #fff;
+  transform: translateY(0) scale(0.97);
+  box-shadow: var(--btn-danger-shadow), var(--btn-inset-highlight);
+}

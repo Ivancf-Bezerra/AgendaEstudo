@@ -1,0 +1,149 @@
+<div class="shell">
+  <app-confirm-dialog />
+  <app-celebration-layer />
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand-block">
+        <a
+          routerLink="/"
+          class="brand"
+          routerLinkActive="brand--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          ariaCurrentWhenActive="page"
+        >
+          Agenda
+        </a>
+        <a routerLink="/notes" class="topbar-notes" routerLinkActive="topbar-notes--on" ariaCurrentWhenActive="page">
+          Notas
+        </a>
+      </div>
+      <div class="actions">
+        <button
+          type="button"
+          class="icon-btn icon-hit topbar-bell"
+          appTooltip="Lembretes: aviso 24 h e 15 min antes de cada evento. Clica para ativar notificações do navegador."
+          tooltipPosition="bottom"
+          (click)="aoClicarNotificacoes($event)"
+          aria-label="Notificações e lembretes de eventos"
+        >
+          <span class="icon-hit__face">
+            <lucide-icon [img]="iconBell" [size]="22" strokeWidth="2" class="icon-btn__ic" aria-hidden="true" />
+          </span>
+          @if (reminders.upcomingCount() > 0) {
+            <span class="topbar-bell__badge" aria-hidden="true">{{ reminders.upcomingCount() }}</span>
+          }
+        </button>
+        <div class="topbar-menu-wrap" data-topbar-definicoes-wrap>
+          <button
+            type="button"
+            class="icon-btn icon-hit"
+            appTooltip="Definições"
+            tooltipPosition="bottom"
+            (click)="alternarMenuDefinicoes($event)"
+            [attr.aria-expanded]="menuDefinicoesAberto()"
+            aria-haspopup="menu"
+            aria-controls="topbar-menu-definicoes"
+            aria-label="Abrir definições"
+          >
+            <span class="icon-hit__face">
+              <lucide-icon [img]="iconSettings" [size]="22" strokeWidth="2" class="icon-btn__ic" aria-hidden="true" />
+            </span>
+          </button>
+          @if (menuDefinicoesAberto()) {
+            <div
+              id="topbar-menu-definicoes"
+              class="topbar-popover"
+              role="menu"
+              aria-label="Definições"
+              (click)="$event.stopPropagation()"
+            >
+              <button
+                type="button"
+                class="topbar-popover__row"
+                role="menuitem"
+                (click)="toggleTheme()"
+                [attr.aria-label]="theme.dark() ? 'Tema claro' : 'Tema escuro'"
+              >
+                @if (theme.dark()) {
+                  <lucide-icon [img]="iconSun" [size]="20" strokeWidth="2" class="topbar-popover__ic" aria-hidden="true" />
+                } @else {
+                  <lucide-icon [img]="iconMoon" [size]="20" strokeWidth="2" class="topbar-popover__ic" aria-hidden="true" />
+                }
+                <span class="topbar-popover__label">{{ theme.dark() ? 'Tema claro' : 'Tema escuro' }}</span>
+              </button>
+              <button
+                type="button"
+                class="topbar-popover__row topbar-popover__row--logout"
+                role="menuitem"
+                (click)="logout()"
+                aria-label="Sair da agenda"
+              >
+                <lucide-icon [img]="iconLogout" [size]="20" strokeWidth="2" class="topbar-popover__ic" aria-hidden="true" />
+                <span class="topbar-popover__label">Sair</span>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+
+  @if (fabVisible()) {
+    <div class="fab-wrap">
+      @if (menuCriacaoAberto()) {
+        <div
+          id="fab-menu-criacao"
+          class="fab-menu"
+          role="menu"
+          aria-label="Criar novo"
+          (click)="$event.stopPropagation()"
+        >
+          <button
+            type="button"
+            class="fab-menu__item icon-hit fab-menu__item--event"
+            role="menuitem"
+            aria-label="Novo evento"
+            (click)="irNovoEvento()"
+          >
+            <span class="fab-menu__label">Novo evento</span>
+            <span class="icon-hit__face fab-menu__face">
+              <lucide-icon [img]="iconCalendarPlus" [size]="20" strokeWidth="2.2" aria-hidden="true" />
+            </span>
+          </button>
+          <button
+            type="button"
+            class="fab-menu__item icon-hit fab-menu__item--note"
+            role="menuitem"
+            aria-label="Nova nota"
+            (click)="abrirNovaNota()"
+          >
+            <span class="fab-menu__label">Nova nota</span>
+            <span class="icon-hit__face fab-menu__face">
+              <lucide-icon [img]="iconStickyNote" [size]="20" strokeWidth="2.2" aria-hidden="true" />
+            </span>
+          </button>
+        </div>
+      }
+      <button
+        type="button"
+        class="fab-main icon-hit"
+        appTooltip="Criar novo"
+        tooltipPosition="left"
+        [attr.aria-expanded]="menuCriacaoAberto()"
+        aria-haspopup="menu"
+        aria-controls="fab-menu-criacao"
+        (click)="alternarMenuCriacao($event)"
+      >
+        <span class="icon-hit__face fab-main__face">
+          <lucide-icon [img]="iconCriar" [size]="26" strokeWidth="2.1" aria-hidden="true" />
+        </span>
+      </button>
+    </div>
+  }
+
+  <app-quick-note-pad />
+</div>
